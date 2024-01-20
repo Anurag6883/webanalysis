@@ -41,19 +41,10 @@ def most_busy_users(df):
     return x,df
 
 
-def create_wordcloud(selected_user, df):
-    # Assuming the 'stop_hinglish.txt' file is in the same directory as your script
-    file_path = os.path.join(os.path.dirname(__file__), 'stop_hinglish.txt')
+def create_wordcloud(selected_user,df):
 
-    if not os.path.exists(file_path):
-        print(f"Error: File '{file_path}' not found.")
-        return None
-
-    with open(file_path, 'rb') as f:
-        stop_words_binary = f.read()
-
-    # Decode using the appropriate encoding
-    stop_words = stop_words_binary.decode('latin-1', errors='replace')
+    f = open('stop_hinglish.txt', 'r')
+    stop_words = f.read()
 
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
@@ -68,22 +59,9 @@ def create_wordcloud(selected_user, df):
                 y.append(word)
         return " ".join(y)
 
-    wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
-
-    # Create a frequency dictionary using Counter
-    words = " ".join(temp['message'].apply(remove_stop_words))
-    frequencies = Counter(words.split())
-
-    try:
-        # Use generate_from_frequencies directly
-        df_wc = wc.generate_from_frequencies(frequencies)
-    except Exception as e:
-        print(f"Error generating WordCloud: {e}")
-        return None
-
-    # Display the WordCloud directly using st.image()
-    st.image(df_wc.to_image(), use_container_width=True)
-
+    wc = WordCloud(width=500,height=500,min_font_size=10,background_color='white')
+    temp['message'] = temp['message'].apply(remove_stop_words)
+    df_wc = wc.generate(temp['message'].str.cat(sep=" "))
     return df_wc
     
 def most_common_words(selected_user,df):
