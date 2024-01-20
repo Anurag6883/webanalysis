@@ -50,11 +50,11 @@ def create_wordcloud(selected_user, df):
     temp['message'] = temp['message'].apply(lambda x: x.strip())  # Remove leading/trailing whitespaces
     temp['message'] = temp['message'].replace('', 'NoContent')  # Replace empty messages with a placeholder
 
-    if not temp['message'].empty:
+    if not temp['message'].empty and temp['message'].nunique() > 1:
         wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
         df_wc = wc.generate(temp['message'].str.cat(sep=" "))
     else:
-        st.warning("No valid messages available for WordCloud generation.")
+        st.warning("No valid or diverse messages available for WordCloud generation.")
 
     return df_wc
     
