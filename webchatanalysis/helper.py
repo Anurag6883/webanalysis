@@ -42,8 +42,11 @@ def most_busy_users(df):
 
 
 
+import os
+
 def create_wordcloud(selected_user, df):
-    file_path = '/full/path/to/stop_hinglish.txt'  # Replace with the actual full path
+    # Assuming the 'stop_hinglish.txt' file is in the same directory as your script
+    file_path = os.path.join(os.path.dirname(__file__), 'stop_hinglish.txt')
 
     if not os.path.exists(file_path):
         print(f"Error: File '{file_path}' not found.")
