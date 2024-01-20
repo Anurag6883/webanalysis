@@ -35,7 +35,7 @@ def most_busy_users(df):
         columns={'index': 'name', 'user': 'percent'})
     return x,df
 
-def create_wordcloud(selected_user,df):
+def create_wordcloud(selected_user, df):
 
     f = open('stop_hinglish.txt', 'r')
     stop_words = f.read()
@@ -46,18 +46,18 @@ def create_wordcloud(selected_user,df):
     temp = df[df['user'] != 'group_notification']
     temp = temp[temp['message'] != '<Media omitted>\n']
 
-    def remove_stop_words(message):
-        y = []
-        for word in message.lower().split():
-            if word not in stop_words:
-                y.append(word)
-        return " ".join(y)
+    # Ensure messages are not empty or just whitespace
+    temp['message'] = temp['message'].apply(lambda x: x.strip())  # Remove leading/trailing whitespaces
+    temp['message'] = temp['message'].replace('', 'NoContent')  # Replace empty messages with a placeholder
 
-    wc = WordCloud(width=500,height=500,min_font_size=10,background_color='white')
-    temp['message'] = temp['message'].apply(remove_stop_words)
-    df_wc = wc.generate(temp['message'].str.cat(sep=" "))
+    if not temp['message'].empty:
+        wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
+        df_wc = wc.generate(temp['message'].str.cat(sep=" "))
+    else:
+        st.warning("No valid messages available for WordCloud generation.")
+
     return df_wc
-
+    
 def most_common_words(selected_user,df):
 
     f = open('stop_hinglish.txt','r')
