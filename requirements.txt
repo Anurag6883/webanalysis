@@ -5,3 +5,4 @@ pandas==1.3.3
 urlextract==1.3.0
 wordcloud==1.8.1
 emoji==1.2.0
+numpy==1.21.0
