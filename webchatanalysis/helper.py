@@ -35,23 +35,55 @@ def most_busy_users(df):
         columns={'index': 'name', 'user': 'percent'})
     return x,df
 
-def create_wordcloud(selected_user,df):
+def create_wordcloud(selected_user, df):
+    """
+    Generate a word cloud based on the selected user.
 
-    f = open('stop_hinglish.txt', 'r')
-    stop_words = f.read()
+    Parameters:
+    - selected_user (str): The selected user for analysis.
+    - df (DataFrame): The chat DataFrame.
 
-    if selected_user != 'Overall':
-        df = df[df['user'] == selected_user]
+    Returns:
+    WordCloud: A WordCloud object.
+    """
+    stop_words_file = 'stop_hinglish.txt'
 
-    temp = df[df['user'] != 'group_notification']
-    temp = temp[temp['message'] != '<Media omitted>\n']
+    # Check if the file exists before attempting to open it
+    if not os.path.isfile(stop_words_file):
+        print(f"Error: Stop words file '{stop_words_file}' not found.")
+        return None
 
-    def remove_stop_words(message):
-        y = []
-        for word in message.lower().split():
-            if word not in stop_words:
-                y.append(word)
-        return " ".join(y)
+    # Specify the path to the stop words file relative to the helper.py file
+    stop_words_path = os.path.join(os.path.dirname(__file__), stop_words_file)
+
+    try:
+        with open(stop_words_path, 'r') as f:
+            stop_words = f.read()
+
+        if selected_user != 'Overall':
+            df = df[df['user'] == selected_user]
+
+        temp = df[df['user'] != 'group_notification']
+        temp = temp[temp['message'] != '<Media omitted>\n']
+
+        def remove_stop_words(message, stop_words):
+            y = []
+            for word in message.lower().split():
+                if word not in stop_words:
+                    y.append(word)
+            return " ".join(y)
+
+        wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
+        temp['message'] = temp['message'].apply(lambda x: remove_stop_words(x, stop_words))
+        df_wc = wc.generate(temp['message'].str.cat(sep=" "))
+        return df_wc
+
+    except FileNotFoundError:
+        print(f"Error: '{stop_words_path}' not found. Check the file path.")
+        return None
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
 
     wc = WordCloud(width=500,height=500,min_font_size=10,background_color='white')
     temp['message'] = temp['message'].apply(remove_stop_words)
