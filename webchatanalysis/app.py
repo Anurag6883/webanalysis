@@ -63,9 +63,9 @@ if uploaded_file is not None:
         if pd.api.types.is_datetime64_ns_dtype(daily_timeline.index):
             daily_timeline.index = daily_timeline.index.astype(int) / 10**9
 
-ax.plot(daily_timeline.index, daily_timeline['message'].values, color='black')  # Use .values to convert to numpy array
-plt.xticks(rotation='vertical')    
-st.pyplot(fig)
+        ax.plot(daily_timeline.index, daily_timeline['message'].values, color='black')  # Use .values to convert to numpy array    
+        plt.xticks(rotation='vertical')    
+        st.pyplot(fig)
 
         # activity map
         st.title('Activity Map')
