@@ -53,7 +53,7 @@ def create_wordcloud(selected_user, df):
         stop_words_binary = f.read()
 
     # Decode using the appropriate encoding
-    stop_words = stop_words_binary.decode('latin-1')  # Replace with the correct encoding if needed
+    stop_words = stop_words_binary.decode('latin-1', errors='replace')
 
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
@@ -70,13 +70,17 @@ def create_wordcloud(selected_user, df):
 
     wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
     temp['message'] = temp['message'].apply(remove_stop_words)
-    df_wc = wc.generate(temp['message'].str.cat(sep=" "))
+    
+    try:
+        df_wc = wc.generate(temp['message'].str.cat(sep=" "))
+    except Exception as e:
+        print(f"Error generating WordCloud: {e}")
+        return None
 
     # Display the WordCloud directly using st.image()
     st.image(df_wc.to_image(), use_container_width=True)
 
     return df_wc
-
 def most_common_words(selected_user,df):
 
     f = open('stop_hinglish.txt','r')
