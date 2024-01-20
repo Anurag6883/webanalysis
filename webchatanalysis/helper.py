@@ -43,8 +43,14 @@ def most_busy_users(df):
 
 
 def create_wordcloud(selected_user, df):
-    f = open('stop_hinglish.txt', 'r')
-    stop_words = f.read()
+    file_path = '/full/path/to/stop_hinglish.txt'  # Replace with the actual full path
+
+    if not os.path.exists(file_path):
+        print(f"Error: File '{file_path}' not found.")
+        return None
+
+    with open(file_path, 'r') as f:
+        stop_words = f.read()
 
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
