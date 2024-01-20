@@ -51,9 +51,17 @@ def create_wordcloud(selected_user, df):
     temp = df[df['user'] != 'group_notification']
     temp = temp[temp['message'] != '<Media omitted>\n']
 
+    # Define the remove_stop_words function
+    def remove_stop_words(message):
+        if isinstance(message, str) and message.strip():
+            return " ".join([word for word in message.lower().split() if word not in stop_words])
+        else:
+            return ""
+
+    temp['message'] = temp['message'].apply(remove_stop_words)
+
     if not temp['message'].empty:
-        wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white',font_path='/C:/WINDOWS/FONTS')
-        temp['message'] = temp['message'].apply(remove_stop_words)
+        wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
         df_wc = wc.generate(temp['message'].str.cat(sep=" "))
     else:
         st.warning("No text available for WordCloud generation.")
