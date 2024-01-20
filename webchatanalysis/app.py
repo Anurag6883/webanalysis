@@ -58,9 +58,14 @@ if uploaded_file is not None:
         daily_timeline.index = pd.to_numeric(daily_timeline.index, errors='coerce')
 
         fig, ax = plt.subplots()
-        ax.plot(daily_timeline.index, daily_timeline['message'].values, color='black')  # Use .values to convert to numpy array
-        plt.xticks(rotation='vertical')    
-        st.pyplot(fig)
+
+        # Convert datetime64[ns] index to float
+        if pd.api.types.is_datetime64_ns_dtype(daily_timeline.index):
+            daily_timeline.index = daily_timeline.index.astype(int) / 10**9
+
+ax.plot(daily_timeline.index, daily_timeline['message'].values, color='black')  # Use .values to convert to numpy array
+plt.xticks(rotation='vertical')    
+st.pyplot(fig)
 
         # activity map
         st.title('Activity Map')
