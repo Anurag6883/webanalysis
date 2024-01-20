@@ -52,7 +52,7 @@ def create_wordcloud(selected_user, df):
 
     if not temp['message'].empty and temp['message'].nunique() > 1:
         wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
-        df_wc = wc.generate(temp['message'].str.cat(sep=" "))
+        df_wc = wc.generate_from_text(temp['message'].str.cat(sep=" "))
     else:
         st.warning("No valid or diverse messages available for WordCloud generation.")
 
