@@ -43,41 +43,30 @@ def most_busy_users(df):
 
 
 def create_wordcloud(selected_user, df):
-    """
-    Generate a word cloud based on the selected user.
+    f = open('stop_hinglish.txt', 'r')
+    stop_words = f.read()
 
-    Parameters:
-    - selected_user (str): The selected user for analysis.
-    - df (DataFrame): The chat DataFrame.
+    if selected_user != 'Overall':
+        df = df[df['user'] == selected_user]
 
-    Returns:
-    WordCloud or None: A WordCloud object or None if an error occurs.
-    """
-    stop_words_file = 'stop_hinglish.txt'
+    temp = df[df['user'] != 'group_notification']
+    temp = temp[temp['message'] != '<Media omitted>\n']
 
-    # ... (rest of the function remains unchanged)
+    def remove_stop_words(message):
+        y = []
+        for word in message.lower().split():
+            if word not in stop_words:
+                y.append(word)
+        return " ".join(y)
 
-    try:
-        # ... (rest of the function remains unchanged)
+    wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
+    temp['message'] = temp['message'].apply(remove_stop_words)
+    df_wc = wc.generate(temp['message'].str.cat(sep=" "))
 
-        wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
-        temp['message'] = temp['message'].apply(lambda x: remove_stop_words(x, stop_words))
-        df_wc = wc.generate(temp['message'].str.cat(sep=" "))
+    # Display the WordCloud directly using st.image()
+    st.image(df_wc.to_image(), use_container_width=True)
 
-        # Convert WordCloud to PIL image
-        wc_image = Image.fromarray(df_wc.to_array())
-
-        # Display the WordCloud using st.image()
-        st.image(wc_image, use_container_width=True)
-
-        return df_wc
-
-    except FileNotFoundError:
-        print(f"Error: '{stop_words_path}' not found. Check the file path.")
-        return None
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
+    return df_wc
 
 def most_common_words(selected_user,df):
 
