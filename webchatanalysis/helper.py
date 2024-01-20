@@ -45,18 +45,18 @@ def create_wordcloud(selected_user, df):
     f = open('stop_hinglish.txt', 'r')
     stop_words = f.read()
 
-    if selected_user != 'Overall':
-        df = df[df['user'] == selected_user]
-
-    temp = df[df['user'] != 'group_notification']
-    temp = temp[temp['message'] != '<Media omitted>\n']
-
     # Define the remove_stop_words function
     def remove_stop_words(message):
         if isinstance(message, str) and message.strip():
             return " ".join([word for word in message.lower().split() if word not in stop_words])
         else:
             return ""
+
+    if selected_user != 'Overall':
+        df = df[df['user'] == selected_user]
+
+    temp = df[df['user'] != 'group_notification']
+    temp = temp[temp['message'] != '<Media omitted>\n']
 
     temp['message'] = temp['message'].apply(remove_stop_words)
 
