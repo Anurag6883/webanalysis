@@ -53,6 +53,10 @@ if uploaded_file is not None:
         # daily timeline
         st.title("Daily Timeline")
         daily_timeline = helper.daily_timeline(selected_user, df)
+
+        # Convert index to numeric
+        daily_timeline.index = pd.to_numeric(daily_timeline.index, errors='coerce')
+
         fig, ax = plt.subplots()
         ax.plot(daily_timeline.index, daily_timeline['message'].values, color='black')  # Use .values to convert to numpy array
         plt.xticks(rotation='vertical')    
