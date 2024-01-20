@@ -54,7 +54,7 @@ if uploaded_file is not None:
         st.title("Daily Timeline")
         daily_timeline = helper.daily_timeline(selected_user, df)
         fig, ax = plt.subplots()
-        ax.plot(daily_timeline['only_date'], daily_timeline['message'].values, color='black')
+        ax.plot(daily_timeline['only_date'], daily_timeline['message'].values, color='black')  # Use .values to convert to numpy array
         plt.xticks(rotation='vertical')
         st.pyplot(fig)
 
