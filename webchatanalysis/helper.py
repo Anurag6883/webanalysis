@@ -3,11 +3,6 @@ from wordcloud import WordCloud
 import pandas as pd
 from collections import Counter
 import emoji
-import os
-import streamlit as st
-from PIL import Image
-
-# ... (rest of the imports)
 
 extract = URLExtract()
 
@@ -40,17 +35,10 @@ def most_busy_users(df):
         columns={'index': 'name', 'user': 'percent'})
     return x,df
 
+def create_wordcloud(selected_user,df):
 
-def create_wordcloud(selected_user, df):
     f = open('stop_hinglish.txt', 'r')
     stop_words = f.read()
-
-    # Define the remove_stop_words function
-    def remove_stop_words(message):
-        if isinstance(message, str) and message.strip():
-            return " ".join([word for word in message.lower().split() if word not in stop_words])
-        else:
-            return ""
 
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
@@ -58,19 +46,21 @@ def create_wordcloud(selected_user, df):
     temp = df[df['user'] != 'group_notification']
     temp = temp[temp['message'] != '<Media omitted>\n']
 
+    def remove_stop_words(message):
+        y = []
+        for word in message.lower().split():
+            if word not in stop_words:
+                y.append(word)
+        return " ".join(y)
+
+    wc = WordCloud(width=500,height=500,min_font_size=10,background_color='white',font_path="./ARIAL.TTF)
     temp['message'] = temp['message'].apply(remove_stop_words)
-
-    if not temp['message'].empty:
-        wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
-        df_wc = wc.generate(temp['message'].str.cat(sep=" "))
-    else:
-        st.warning("No text available for WordCloud generation.")
-        df_wc = None  # You may want to handle this case appropriately
-
+    df_wc = wc.generate(temp['message'].str.cat(sep=" "))
     return df_wc
-    
-def most_common_words(selected_user, df, top_n=20):
-    f = open('stop_hinglish.txt', 'r')
+
+def most_common_words(selected_user,df):
+
+    f = open('stop_hinglish.txt','r')
     stop_words = f.read()
 
     if selected_user != 'Overall':
@@ -86,8 +76,9 @@ def most_common_words(selected_user, df, top_n=20):
             if word not in stop_words:
                 words.append(word)
 
-    most_common_df = pd.DataFrame(Counter(words).most_common(top_n))
+    most_common_df = pd.DataFrame(Counter(words).most_common(20))
     return most_common_df
+
 # def emoji_helper(selected_user,df):
 #     if selected_user != 'Overall':
 #         df = df[df['user'] == selected_user]
@@ -158,18 +149,3 @@ def activity_heatmap(selected_user,df):
     user_heatmap = df.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
 
     return user_heatmap
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
