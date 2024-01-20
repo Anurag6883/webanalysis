@@ -86,25 +86,22 @@ if uploaded_file is not None:
         st.title("Monthly Timeline")
         timeline = helper.monthly_timeline(selected_user, df)
         fig, ax = plt.subplots(figsize=(10, 6))
-        # Ensure the 'message' column is numeric or convertible to numeric
-        timeline['message'] = pd.to_numeric(timeline['message'], errors='coerce')
-        # Plot the data
-        ax.plot(timeline['time'], timeline['message'], color='#3498db')  # Streamlit blue
+        ax.plot(timeline['time'], timeline['message'].values, color='#3498db')  # Streamlit blue
         plt.xticks(rotation='vertical')
         st.pyplot(fig)
-
+        
         # Daily timeline
         st.title("Daily Timeline")
         daily_timeline = helper.daily_timeline(selected_user, df)
         fig, ax = plt.subplots(figsize=(8, 6))
-        ax.plot(daily_timeline['only_date'], daily_timeline['message'], color='#2ecc71')  # Streamlit green
+        ax.plot(daily_timeline['only_date'], daily_timeline['message'].values, color='#2ecc71')  # Streamlit green
         plt.xticks(rotation='vertical')
         st.pyplot(fig)
-
+        
         # Activity map
         st.title('Activity Map')
         col1, col2 = st.columns(2)
-
+        
         with col1:
             st.header("Most busy day")
             busy_day = helper.week_activity_map(selected_user, df)
