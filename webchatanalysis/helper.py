@@ -4,6 +4,10 @@ import pandas as pd
 from collections import Counter
 import emoji
 import os
+import streamlit as st
+from PIL import Image
+
+# ... (rest of the imports)
 
 extract = URLExtract()
 
@@ -36,6 +40,8 @@ def most_busy_users(df):
         columns={'index': 'name', 'user': 'percent'})
     return x,df
 
+
+
 def create_wordcloud(selected_user, df):
     """
     Generate a word cloud based on the selected user.
@@ -58,10 +64,11 @@ def create_wordcloud(selected_user, df):
         temp['message'] = temp['message'].apply(lambda x: remove_stop_words(x, stop_words))
         df_wc = wc.generate(temp['message'].str.cat(sep=" "))
 
-        # Display the WordCloud directly using plt.imshow()
-        plt.imshow(df_wc, interpolation='bilinear')
-        plt.axis('off')  # Turn off axes for better visualization
-        plt.show()
+        # Convert WordCloud to PIL image
+        wc_image = Image.fromarray(df_wc.to_array())
+
+        # Display the WordCloud using st.image()
+        st.image(wc_image, use_container_width=True)
 
         return df_wc
 
