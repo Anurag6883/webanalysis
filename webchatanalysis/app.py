@@ -89,9 +89,16 @@ if uploaded_file is not None:
         st.pyplot(fig)
 
 
-        # Daily timeline
-        st.title("Daily Timeline")
-        daily_timeline = helper.daily_timeline(selected_user, df)
+        # Assuming 'only_date' is a string, convert it to datetime
+        daily_timeline['only_date'] = pd.to_datetime(daily_timeline['only_date'])
+
+        # Sort the DataFrame by 'only_date'
+        daily_timeline = daily_timeline.sort_values('only_date')
+
+        # Confirm column names
+        print(daily_timeline.columns)
+
+        # Plotting
         fig, ax = plt.subplots(figsize=(8, 6))
         ax.plot(daily_timeline['only_date'], daily_timeline['message'], color='#2ecc71')  # Streamlit green
         plt.xticks(rotation='vertical')
