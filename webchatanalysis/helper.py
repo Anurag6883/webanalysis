@@ -3,6 +3,7 @@ from wordcloud import WordCloud
 import pandas as pd
 from collections import Counter
 import emoji
+import matplotlib.pyplot as plt
 
 extract = URLExtract()
 
@@ -35,28 +36,28 @@ def most_busy_users(df):
         columns={'index': 'name', 'user': 'percent'})
     return x,df
 
-def create_wordcloud(selected_user,df):
 
-    f = open('stop_hinglish.txt', 'r')
-    stop_words = f.read()
-
+def create_wordcloud(selected_user, df):
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
 
     temp = df[df['user'] != 'group_notification']
     temp = temp[temp['message'] != '<Media omitted>\n']
 
-    def remove_stop_words(message):
-        y = []
-        for word in message.lower().split():
-            if word not in stop_words:
-                y.append(word)
-        return " ".join(y)
+    # Combine all messages into a single string
+    text = temp['message'].str.cat(sep=" ")
 
-    wc = WordCloud(width=500,height=500,min_font_size=10,background_color='white',font_path="./ARIAL.TTF")
-    temp['message'] = temp['message'].apply(remove_stop_words)
-    df_wc = wc.generate(temp['message'].str.cat(sep=" "))
-    return df_wc
+    # Create WordCloud
+    wc = WordCloud(width=500, height=500, background_color='white').generate(text)
+
+    # Display WordCloud
+    plt.figure(figsize=(8, 8))
+    plt.imshow(wc, interpolation='bilinear')
+    plt.axis('off')
+    plt.show()
+
+# Usage
+create_wordcloud(selected_user, df)
 
 def most_common_words(selected_user,df):
 
