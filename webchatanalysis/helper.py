@@ -3,7 +3,6 @@ from wordcloud import WordCloud
 import pandas as pd
 from collections import Counter
 import emoji
-import matplotlib.pyplot as plt
 
 extract = URLExtract()
 
@@ -36,28 +35,28 @@ def most_busy_users(df):
         columns={'index': 'name', 'user': 'percent'})
     return x,df
 
+def create_wordcloud(selected_user,df):
 
-def create_wordcloud(selected_user, df):
+    f = open('stop_hinglish.txt', 'r')
+    stop_words = f.read()
+
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
 
     temp = df[df['user'] != 'group_notification']
     temp = temp[temp['message'] != '<Media omitted>\n']
 
-    # Combine all messages into a single string
-    text = temp['message'].str.cat(sep=" ")
+    def remove_stop_words(message):
+        y = []
+        for word in message.lower().split():
+            if word not in stop_words:
+                y.append(word)
+        return " ".join(y)
 
-    # Create WordCloud
-    wc = WordCloud(width=500, height=500, background_color='white').generate(text)
-
-    # Display WordCloud
-    plt.figure(figsize=(8, 8))
-    plt.imshow(wc, interpolation='bilinear')
-    plt.axis('off')
-    plt.show()
-
-# Usage
-create_wordcloud(selected_user, df)
+    wc = WordCloud(width=500,height=500,min_font_size=10,background_color='white')
+    temp['message'] = temp['message'].apply(remove_stop_words)
+    df_wc = wc.generate(temp['message'].str.cat(sep=" "))
+    return df_wc
 
 def most_common_words(selected_user,df):
 
@@ -150,3 +149,18 @@ def activity_heatmap(selected_user,df):
     user_heatmap = df.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
 
     return user_heatmap
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
