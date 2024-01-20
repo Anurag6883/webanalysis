@@ -69,18 +69,20 @@ def create_wordcloud(selected_user, df):
         return " ".join(y)
 
     wc = WordCloud(width=500, height=500, min_font_size=10, background_color='white')
-    temp['message'] = temp['message'].apply(remove_stop_words)
-    
+
+    # Create a frequency dictionary using Counter
+    words = " ".join(temp['message'].apply(remove_stop_words))
+    frequencies = Counter(words.split())
+
     try:
-        # Use the recolor method instead of generate
-        wc.recolor(colormap="viridis", random_state=3)
-        df_wc = wc.to_image()
+        # Use generate_from_frequencies directly
+        df_wc = wc.generate_from_frequencies(frequencies)
     except Exception as e:
         print(f"Error generating WordCloud: {e}")
         return None
 
     # Display the WordCloud directly using st.image()
-    st.image(df_wc, use_container_width=True)
+    st.image(df_wc.to_image(), use_container_width=True)
 
     return df_wc
     
