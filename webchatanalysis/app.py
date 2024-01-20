@@ -3,10 +3,48 @@ import preprocessor
 import helper
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pandas as pd
 
-# st.sidebar.title("Whatsapp Chat Analyzer")
+# Set Streamlit page configuration
+st.set_page_config(
+    page_title="Web Chat Analyzer",
+    page_icon=":speech_balloon:",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+# Set custom background color and styling for the sidebar
+st.markdown(
+    """
+    <style>
+        body {
+            background-color: skyblue; /* Light gray background */
+        }
+        .stApp {
+            background-color: skyblue; /* Light gray background */
+        }
+        .sidebar .sidebar-content {
+            background-color: #1E2A38; /* Dark teal */
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            border-radius: 10px; /* Rounded corners */
+        }
+        .sidebar .css-2trqyj {
+            color: #FFFFFF; /* White text */
+        }
+        .block-container {
+            background-color: #d2b4de; /* Change to skyblue or any desired color */
+            padding: 1.4rem; /* Adjust the padding as needed */
+            border-radius: 10px; /* Rounded corners */
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.sidebar.title("Web Chat Analyzer")
+
 uploaded_file = st.sidebar.file_uploader("Choose a file")
 if uploaded_file is not None:
     bytes_data = uploaded_file.getvalue()
@@ -42,7 +80,7 @@ if uploaded_file is not None:
             st.header("Links Shared")
             st.title(num_links)
 
-        # monthly timeline
+       # monthly timeline
         st.title("Monthly Timeline")
         timeline = helper.monthly_timeline(selected_user, df)
         fig, ax = plt.subplots()
@@ -50,59 +88,51 @@ if uploaded_file is not None:
         plt.xticks(rotation='vertical')
         st.pyplot(fig)
 
-        # daily timeline
+
+        # Daily timeline
         st.title("Daily Timeline")
         daily_timeline = helper.daily_timeline(selected_user, df)
-
-        # Convert index to numeric
-        daily_timeline.index = pd.to_numeric(daily_timeline.index, errors='coerce')
-
-        fig, ax = plt.subplots()
-
-        # Convert datetime64[ns] index to float
-        if pd.api.types.is_datetime64_ns_dtype(daily_timeline.index):
-            daily_timeline.index = daily_timeline.index.astype(int) / 10**9
-
-        ax.plot(daily_timeline.index, daily_timeline['message'].values, color='black')  # Use .values to convert to numpy array    
-        plt.xticks(rotation='vertical')    
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.plot(daily_timeline['only_date'], daily_timeline['message'], color='#2ecc71')  # Streamlit green
+        plt.xticks(rotation='vertical')
         st.pyplot(fig)
 
-        # activity map
+        # Activity map
         st.title('Activity Map')
         col1, col2 = st.columns(2)
 
         with col1:
             st.header("Most busy day")
             busy_day = helper.week_activity_map(selected_user, df)
-            fig, ax = plt.subplots()
-            ax.bar(busy_day.index, busy_day.values, color='purple')
+            fig, ax = plt.subplots(figsize=(8, 6))
+            ax.bar(busy_day.index, busy_day.values, color='#9b59b6')  # Purple
             plt.xticks(rotation='vertical')
             st.pyplot(fig)
 
         with col2:
             st.header("Most busy month")
             busy_month = helper.month_activity_map(selected_user, df)
-            fig, ax = plt.subplots()
-            ax.bar(busy_month.index, busy_month.values, color='orange')
+            fig, ax = plt.subplots(figsize=(8, 6))
+            ax.bar(busy_month.index, busy_month.values, color='#e67e22')  # Orange
             plt.xticks(rotation='vertical')
             st.pyplot(fig)
 
         st.title("Weekly Activity Map")
         user_heatmap = helper.activity_heatmap(selected_user, df)
-        fig, ax = plt.subplots()
-        ax = sns.heatmap(user_heatmap)
+        fig, ax = plt.subplots(figsize=(10, 8))
+        ax = sns.heatmap(user_heatmap, cmap='YlGnBu')  # Yellow to Blue
         st.pyplot(fig)
 
-        # finding the busiest users in the group(Group level)
+        # Finding the busiest users in the group (Group level)
         if selected_user == 'Overall':
             st.title('Most Busy Users')
             x, new_df = helper.most_busy_users(df)
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(10, 6))
 
             col1, col2 = st.columns(2)
 
             with col1:
-                ax.bar(x.index, x.values, color='red')
+                ax.bar(x.index, x.values, color='#e74c3c')  # Red
                 plt.xticks(rotation='vertical')
                 st.pyplot(fig)
             with col2:
@@ -111,30 +141,33 @@ if uploaded_file is not None:
         # WordCloud
         st.title("Wordcloud")
         df_wc = helper.create_wordcloud(selected_user, df)
-        fig, ax = plt.subplots()
-        ax.imshow(df_wc)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.imshow(df_wc, interpolation='bilinear')
         st.pyplot(fig)
 
-        # most common words
+        # Most common words
         most_common_df = helper.most_common_words(selected_user, df)
-
-        fig, ax = plt.subplots()
-
-        ax.barh(most_common_df[0], most_common_df[1])
-        plt.xticks(rotation='vertical')
-
-        st.title('Most common words')
+        fig, ax = plt.subplots(figsize=(10, 8))
+        ax.barh(most_common_df[0], most_common_df[1], color='#3498db')  # Streamlit blue
+        plt.xticks(rotation='horizontal')
+        st.title('Most Common Words')
         st.pyplot(fig)
 
-        # emoji analysis
+        # Emoji analysis
         emoji_df = helper.emoji_helper(selected_user, df)
         st.title("Emoji Analysis")
-
         col1, col2 = st.columns(2)
 
         with col1:
             st.dataframe(emoji_df)
         with col2:
-            fig, ax = plt.subplots()
-            ax.pie(emoji_df[1].head(), labels=emoji_df[0].head(), autopct="%0.2f")
-            st.pyplot(fig)
+            fig, ax = plt.subplots(figsize=(8, 8))
+    
+            emoji_df_head = emoji_df.head()
+    
+            # Check if the DataFrame has at least two columns
+            if emoji_df_head.shape[1] >= 2:
+                ax.pie(emoji_df_head.iloc[:, 1], labels=emoji_df_head.iloc[:, 0], autopct="%0.2f", colors=sns.color_palette('pastel'))
+                st.pyplot(fig)
+            else:
+                st.warning("The DataFrame does not have enough columns for plotting.")
