@@ -3,6 +3,7 @@ import preprocessor
 import helper
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pandas as pd
 
 # Set Streamlit page configuration
 st.set_page_config(
@@ -80,14 +81,18 @@ if uploaded_file is not None:
             st.header("Links Shared")
             st.title(num_links)
 
-       # monthly timeline
+        # Monthly timeline
         st.title("Monthly Timeline")
         timeline = helper.monthly_timeline(selected_user, df)
+
+        # Convert index to numeric and reset index before plotting
+        timeline.index = pd.to_numeric(timeline.index, errors='coerce')
+        timeline.reset_index(inplace=True)
+
         fig, ax = plt.subplots()
-        ax.plot(timeline['time'].values, timeline['message'].values, color='green')
+        ax.plot(timeline.index, timeline['message'].values, color='green')
         plt.xticks(rotation='vertical')
         st.pyplot(fig)
-
 
         # Daily timeline
         st.title("Daily Timeline")
