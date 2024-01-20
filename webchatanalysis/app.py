@@ -89,14 +89,17 @@ if uploaded_file is not None:
         st.pyplot(fig)
 
 
-        # Assuming 'only_date' is a string, convert it to datetime
-        daily_timeline['only_date'] = pd.to_datetime(daily_timeline['only_date'])
+        # Assuming 'only_date' is a string, print unique values for inspection
+        print("Unique values in 'only_date' before conversion:", daily_timeline['only_date'].unique())
 
-        # Sort the DataFrame by 'only_date'
-        daily_timeline = daily_timeline.sort_values('only_date')
+        # Convert 'only_date' to datetime with specified format
+        daily_timeline['only_date'] = pd.to_datetime(daily_timeline['only_date'], errors='coerce', format='%Y-%m-%d')
 
-        # Confirm column names
-        print(daily_timeline.columns)
+        # Drop rows with NaT (Not a Time) values
+        daily_timeline = daily_timeline.dropna(subset=['only_date'])
+
+        # Confirm changes
+        print("Unique values in 'only_date' after conversion:", daily_timeline['only_date'].unique())
 
         # Plotting
         fig, ax = plt.subplots(figsize=(8, 6))
