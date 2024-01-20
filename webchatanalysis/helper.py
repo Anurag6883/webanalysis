@@ -41,9 +41,6 @@ def most_busy_users(df):
     return x,df
 
 
-
-import os
-
 def create_wordcloud(selected_user, df):
     # Assuming the 'stop_hinglish.txt' file is in the same directory as your script
     file_path = os.path.join(os.path.dirname(__file__), 'stop_hinglish.txt')
@@ -52,8 +49,11 @@ def create_wordcloud(selected_user, df):
         print(f"Error: File '{file_path}' not found.")
         return None
 
-    with open(file_path, 'r') as f:
-        stop_words = f.read()
+    with open(file_path, 'rb') as f:
+        stop_words_binary = f.read()
+
+    # Decode using the appropriate encoding
+    stop_words = stop_words_binary.decode('latin-1')  # Replace with the correct encoding if needed
 
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
