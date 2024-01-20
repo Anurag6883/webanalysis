@@ -44,7 +44,7 @@ def create_wordcloud(selected_user, df):
     - df (DataFrame): The chat DataFrame.
 
     Returns:
-    WordCloud: A WordCloud object.
+    WordCloud or None: A WordCloud object or None if an error occurs.
     """
     stop_words_file = 'stop_hinglish.txt'
 
@@ -84,11 +84,6 @@ def create_wordcloud(selected_user, df):
     except Exception as e:
         print(f"Error: {e}")
         return None
-
-    wc = WordCloud(width=500,height=500,min_font_size=10,background_color='white')
-    temp['message'] = temp['message'].apply(remove_stop_words)
-    df_wc = wc.generate(temp['message'].str.cat(sep=" "))
-    return df_wc
 
 def most_common_words(selected_user,df):
 
