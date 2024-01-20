@@ -72,15 +72,18 @@ def create_wordcloud(selected_user, df):
     temp['message'] = temp['message'].apply(remove_stop_words)
     
     try:
-        df_wc = wc.generate(temp['message'].str.cat(sep=" "))
+        # Use the recolor method instead of generate
+        wc.recolor(colormap="viridis", random_state=3)
+        df_wc = wc.to_image()
     except Exception as e:
         print(f"Error generating WordCloud: {e}")
         return None
 
     # Display the WordCloud directly using st.image()
-    st.image(df_wc.to_image(), use_container_width=True)
+    st.image(df_wc, use_container_width=True)
 
     return df_wc
+    
 def most_common_words(selected_user,df):
 
     f = open('stop_hinglish.txt','r')
