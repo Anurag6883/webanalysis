@@ -89,28 +89,35 @@ if uploaded_file is not None:
         st.pyplot(fig)
 
 
-        # Assuming 'only_date' is a string, print unique values for inspection
-        print("Unique values in 'only_date' before conversion:", daily_timeline['only_date'].unique())
+        # Assuming 'daily_timeline' is defined before this point in your code
+
+        # Print unique values in 'only_date' for inspection
+        if 'daily_timeline' in locals():
+            print("Unique values in 'only_date' before conversion:", daily_timeline['only_date'].unique())
+        else:
+            print("'daily_timeline' is not defined before attempting to print unique values.")
 
         # Convert 'only_date' to datetime with specified format
-        daily_timeline['only_date'] = pd.to_datetime(daily_timeline['only_date'], errors='coerce', format='%Y-%m-%d')
+        if 'daily_timeline' in locals():
+            daily_timeline['only_date'] = pd.to_datetime(daily_timeline['only_date'], errors='coerce', format='%Y-%m-%d')
 
-        # Drop rows with NaT (Not a Time) values
-        daily_timeline = daily_timeline.dropna(subset=['only_date'])
+            # Drop rows with NaT (Not a Time) values
+            daily_timeline = daily_timeline.dropna(subset=['only_date'])
 
-        # Confirm changes
-        print("Unique values in 'only_date' after conversion:", daily_timeline['only_date'].unique())
+            # Confirm changes
+            print("Unique values in 'only_date' after conversion:", daily_timeline['only_date'].unique())
+        else:
+            print("'daily_timeline' is not defined before attempting to convert and drop.")
 
         # Plotting
-        fig, ax = plt.subplots(figsize=(8, 6))
-        ax.plot(daily_timeline['only_date'], daily_timeline['message'], color='#2ecc71')  # Streamlit green
-        plt.xticks(rotation='vertical')
-        st.pyplot(fig)
-
-        # Activity map
-        st.title('Activity Map')
-        col1, col2 = st.columns(2)
-
+        if 'daily_timeline' in locals():
+            fig, ax = plt.subplots(figsize=(8, 6))
+            ax.plot(daily_timeline['only_date'], daily_timeline['message'], color='#2ecc71')  # Streamlit green
+            plt.xticks(rotation='vertical')
+            st.pyplot(fig)
+        else:
+            print("'daily_timeline' is not defined before attempting to plot.")
+            
         with col1:
             st.header("Most busy day")
             busy_day = helper.week_activity_map(selected_user, df)
