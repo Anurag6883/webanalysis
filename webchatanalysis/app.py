@@ -164,13 +164,11 @@ if uploaded_file is not None:
         st.title('Most Common Words')
         st.pyplot(fig)
 
-        text=df.most_common_words()
-        wordcloud = WordCloud().generate(text)
-
-        # Display the generated image:
-        plt.imshow(wordcloud, interpolation='bilinear')
-        plt.axis("off")
-        plt.show()
+        st.title("Wordcloud")
+        df_wc = helper.create_wordcloud(selected_user, df)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.imshow(df_wc, interpolation='bilinear')
+        st.pyplot(fig)
         #st.title("Word Cloud")
 
         # Combine all messages into a single string
