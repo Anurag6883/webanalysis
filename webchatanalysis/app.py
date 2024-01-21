@@ -164,7 +164,7 @@ if uploaded_file is not None:
         st.title('Most Common Words')
         st.pyplot(fig)
 
-        wordcloud = WordCloud().generate(most_common_df)
+        wordcloud = WordCloud().generate(most_common_words)
 
         # Display the generated image:
         plt.imshow(wordcloud, interpolation='bilinear')
