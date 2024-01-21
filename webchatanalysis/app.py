@@ -156,25 +156,6 @@ if uploaded_file is not None:
             with col2:
                 st.dataframe(new_df)
 
-        st.title("Word Cloud")
-
-        # Combine all messages into a single string
-        all_messages = " ".join(df[df['user'] == selected_user]['message'].values)
-
-        # Debugging statements
-        print(f"Number of messages for {selected_user}: {df[df['user'] == selected_user].shape[0]}")
-        print(f"All messages: {all_messages}")
-
-        # Check if there are non-whitespace characters in all_messages
-        if all_messages.strip():
-            # Generate the word cloud
-            wordcloud = WordCloud(width=800, height=400, background_color="white").generate(all_messages)
-
-            # Display the word cloud using Streamlit
-            st.image(wordcloud.to_array(), use_container_width=True)
-        else:
-            st.warning("No words to generate a word cloud.")
-       
         # Most common words
         most_common_df = helper.most_common_words(selected_user, df)
         fig, ax = plt.subplots(figsize=(10, 8))
@@ -182,6 +163,32 @@ if uploaded_file is not None:
         plt.xticks(rotation='horizontal')
         st.title('Most Common Words')
         st.pyplot(fig)
+
+        wordcloud = WordCloud().generate(most_common_df)
+
+        # Display the generated image:
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis("off")
+        plt.show()
+        #st.title("Word Cloud")
+
+        # Combine all messages into a single string
+        #all_messages = " ".join(df[df['user'] == selected_user]['message'].values)
+
+        # Debugging statements
+        #print(f"Number of messages for {selected_user}: {df[df['user'] == selected_user].shape[0]}")
+        #print(f"All messages: {all_messages}")
+
+        # Check if there are non-whitespace characters in all_messages
+        #if all_messages.strip():
+            # Generate the word cloud
+            #wordcloud = WordCloud(width=800, height=400, background_color="white").generate(all_messages)
+
+            # Display the word cloud using Streamlit
+            #st.image(wordcloud.to_array(), use_container_width=True)
+        #else:
+            #st.warning("No words to generate a word cloud.")
+       
 
          # Emoji analysis
         emoji_df = helper.emoji_helper(selected_user, df)
