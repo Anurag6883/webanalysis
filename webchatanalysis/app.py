@@ -164,15 +164,14 @@ if uploaded_file is not None:
         st.title('Most Common Words')
         st.pyplot(fig)
 
-        st.title("Wordcloud")
-        df_wc = helper.create_wordcloud(selected_user, df)
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.imshow(df_wc, interpolation='bilinear')
-        st.pyplot(fig)
-        #st.title("Word Cloud")
-
         # Combine all messages into a single string
-        #all_messages = " ".join(df[df['user'] == selected_user]['message'].values)
+        all_messages = " ".join(df[df['user'] == selected_user]['message'].values)
+        wordcloud = WordCloud().generate(all_messages)
+
+        # Display the generated image:
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis("off")
+        plt.show()
 
         # Debugging statements
         #print(f"Number of messages for {selected_user}: {df[df['user'] == selected_user].shape[0]}")
