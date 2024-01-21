@@ -156,13 +156,20 @@ if uploaded_file is not None:
             with col2:
                 st.dataframe(new_df)
 
-        # WordCloud
-        st.title("Wordcloud")
-        df_wc = helper.create_wordcloud(selected_user, df)
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.imshow(df_wc, interpolation='bilinear')
-        st.pyplot(fig)
+        st.title("Word Cloud")
 
+        # Combine all messages into a single string
+        all_messages = " ".join(df[df['user'] == selected_user]['message'].values)
+
+        # Check if there are words in all_messages
+        if all_messages:
+            # Generate the word cloud
+            wordcloud = WordCloud(width=800, height=400, background_color="white").generate(all_messages)
+
+            # Display the word cloud using Streamlit
+            st.image(wordcloud.to_array(), use_container_width=True)
+        else:
+            st.warning("No words to generate a word cloud.")
        
         # Most common words
         most_common_df = helper.most_common_words(selected_user, df)
