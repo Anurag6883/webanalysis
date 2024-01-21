@@ -155,13 +155,7 @@ if uploaded_file is not None:
             with col2:
                 st.dataframe(new_df)
 
-        # WordCloud
-        st.title("Wordcloud")
-        df_wc = helper.create_wordcloud(selected_user, df)
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.imshow(df_wc, interpolation='bilinear')
-        st.pyplot(fig)
-
+       
         # Most common words
         most_common_df = helper.most_common_words(selected_user, df)
         fig, ax = plt.subplots(figsize=(10, 8))
