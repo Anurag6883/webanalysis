@@ -161,8 +161,12 @@ if uploaded_file is not None:
         # Combine all messages into a single string
         all_messages = " ".join(df[df['user'] == selected_user]['message'].values)
 
-        # Check if there are words in all_messages
-        if all_messages:
+        # Debugging statements
+        print(f"Number of messages for {selected_user}: {df[df['user'] == selected_user].shape[0]}")
+        print(f"All messages: {all_messages}")
+
+        # Check if there are non-whitespace characters in all_messages
+        if all_messages.strip():
             # Generate the word cloud
             wordcloud = WordCloud(width=800, height=400, background_color="white").generate(all_messages)
 
@@ -179,7 +183,7 @@ if uploaded_file is not None:
         st.title('Most Common Words')
         st.pyplot(fig)
 
-        # Emoji analysis
+         # Emoji analysis
         emoji_df = helper.emoji_helper(selected_user, df)
         st.title("Emoji Analysis")
         col1, col2 = st.columns(2)
