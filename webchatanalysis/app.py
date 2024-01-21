@@ -166,26 +166,20 @@ if uploaded_file is not None:
 
         # Combine all messages into a single string
         all_messages = " ".join(df[df['user'] == selected_user]['message'].values)
-        wordcloud = WordCloud().generate(all_messages)
 
-        # Display the generated image:
-        plt.imshow(wordcloud, interpolation='bilinear')
-        plt.axis("off")
-        plt.show()
-
-        # Debugging statements
-        #print(f"Number of messages for {selected_user}: {df[df['user'] == selected_user].shape[0]}")
-        #print(f"All messages: {all_messages}")
+        #Debugging statements
+        print(f"Number of messages for {selected_user}: {df[df['user'] == selected_user].shape[0]}")
+        print(f"All messages: {all_messages}")
 
         # Check if there are non-whitespace characters in all_messages
-        #if all_messages.strip():
-            # Generate the word cloud
-            #wordcloud = WordCloud(width=800, height=400, background_color="white").generate(all_messages)
+        if all_messages.strip():
+            Generate the word cloud
+            wordcloud = WordCloud(width=800, height=400, background_color="white").generate(all_messages)
 
-            # Display the word cloud using Streamlit
-            #st.image(wordcloud.to_array(), use_container_width=True)
-        #else:
-            #st.warning("No words to generate a word cloud.")
+            Display the word cloud using Streamlit
+            st.image(wordcloud.to_array(), use_container_width=True)
+        else:
+            st.warning("No words to generate a word cloud.")
        
 
          # Emoji analysis
