@@ -164,6 +164,20 @@ if uploaded_file is not None:
         st.title('Most Common Words')
         st.pyplot(fig)
 
+        st.title("Word Cloud")
+
+        # Combine all messages into a single string
+        all_messages = " ".join(df[df['user'] == selected_user]['message'].values)
+
+        # Generate the word cloud
+        wordcloud = WordCloud(width=800, height=400, background_color="white").generate(all_messages)
+
+        # Display the word cloud using matplotlib
+        plt.figure(figsize=(10, 5))
+        plt.imshow(wordcloud, interpolation="bilinear")
+        plt.axis("off")
+        st.pyplot(plt)
+
         # Emoji analysis
         emoji_df = helper.emoji_helper(selected_user, df)
         st.title("Emoji Analysis")
