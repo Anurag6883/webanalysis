@@ -176,13 +176,13 @@ if uploaded_file is not None:
             #Generate the word cloud
             wordcloud = WordCloud(width=800, height=400, background_color="white").generate(all_messages)
 
-            Display the word cloud using Streamlit
+            #Display the word cloud using Streamlit
             st.image(wordcloud.to_array(), use_container_width=True)
         else:
             st.warning("No words to generate a word cloud.")
        
 
-         # Emoji analysis
+        # Emoji analysis
         emoji_df = helper.emoji_helper(selected_user, df)
         st.title("Emoji Analysis")
         col1, col2 = st.columns(2)
