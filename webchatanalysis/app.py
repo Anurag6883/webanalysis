@@ -173,7 +173,7 @@ if uploaded_file is not None:
 
         # Check if there are non-whitespace characters in all_messages
         if all_messages.strip():
-            Generate the word cloud
+            #Generate the word cloud
             wordcloud = WordCloud(width=800, height=400, background_color="white").generate(all_messages)
 
             Display the word cloud using Streamlit
