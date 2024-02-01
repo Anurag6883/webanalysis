@@ -35,7 +35,7 @@ st.markdown(
             color: #FFFFFF; /* White text */
         }
         .block-container {
-            background-color: #d2b4de; /* Change to skyblue or any desired color */
+            background-color: #25D366; /* Change to skyblue or any desired color */
             padding: 1.4rem; /* Adjust the padding as needed */
             border-radius: 10px; /* Rounded corners */
         }
