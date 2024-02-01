@@ -18,13 +18,13 @@ st.markdown(
     """
     <style>
         body {
-            background-color: #e6e6e6; /* Light gray background */
+            background-color: #25D366; /* Light gray background */
         }
         .stApp {
-            background-color: #e6e6e6; /* Light gray background */
+            background-color: #25D366; /* Light gray background */
         }
         .sidebar .sidebar-content {
-            background-color: #25d366; /* WhatsApp green */
+            background-color: #1E2A38; /* Dark teal */
             padding-top: 1rem;
             padding-bottom: 1rem;
             padding-left: 2rem;
@@ -35,7 +35,7 @@ st.markdown(
             color: #FFFFFF; /* White text */
         }
         .block-container {
-            background-color: #ffffff; /* White background */
+            background-color: #d2b4de; /* Change to skyblue or any desired color */
             padding: 1.4rem; /* Adjust the padding as needed */
             border-radius: 10px; /* Rounded corners */
         }
@@ -43,6 +43,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 st.sidebar.title("Web Chat Analyzer")
 
 uploaded_file = st.sidebar.file_uploader("Choose a file")
@@ -199,3 +200,4 @@ if uploaded_file is not None:
                 st.pyplot(fig)
             else:
                 st.warning("The DataFrame does not have enough columns for plotting.")
+
