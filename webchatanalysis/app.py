@@ -18,13 +18,13 @@ st.markdown(
     """
     <style>
         body {
-            background-color: skyblue; /* Light gray background */
+            background-color: #e6e6e6; /* Light gray background */
         }
         .stApp {
-            background-color: skyblue; /* Light gray background */
+            background-color: #e6e6e6; /* Light gray background */
         }
         .sidebar .sidebar-content {
-            background-color: #1E2A38; /* Dark teal */
+            background-color: #25d366; /* WhatsApp green */
             padding-top: 1rem;
             padding-bottom: 1rem;
             padding-left: 2rem;
@@ -35,7 +35,7 @@ st.markdown(
             color: #FFFFFF; /* White text */
         }
         .block-container {
-            background-color: #d2b4de; /* Change to skyblue or any desired color */
+            background-color: #ffffff; /* White background */
             padding: 1.4rem; /* Adjust the padding as needed */
             border-radius: 10px; /* Rounded corners */
         }
@@ -43,7 +43,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
 st.sidebar.title("Web Chat Analyzer")
 
 uploaded_file = st.sidebar.file_uploader("Choose a file")
