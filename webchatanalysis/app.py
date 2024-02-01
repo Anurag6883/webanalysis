@@ -18,10 +18,10 @@ st.markdown(
     """
     <style>
         body {
-            background-color: #25D366; /* Light gray background */
+            background-color: skyblue; /* Light gray background */
         }
         .stApp {
-            background-color: #25D366; /* Light gray background */
+            background-color: skyblue; /* Light gray background */
         }
         .sidebar .sidebar-content {
             background-color: #1E2A38; /* Dark teal */
@@ -43,6 +43,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 st.sidebar.title("Web Chat Analyzer")
 
