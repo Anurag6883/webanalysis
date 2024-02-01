@@ -24,7 +24,7 @@ st.markdown(
             background-color: skyblue; /* Light gray background */
         }
         .sidebar .sidebar-content {
-            background-color: #1E2A38; /* Dark teal */
+            background-color: #25D366; /* Dark teal */
             padding-top: 1rem;
             padding-bottom: 1rem;
             padding-left: 2rem;
