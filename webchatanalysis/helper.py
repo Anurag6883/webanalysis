@@ -34,6 +34,7 @@ def most_busy_users(df):
     df = round((df['user'].value_counts() / df.shape[0]) * 100, 2).reset_index().rename(
         columns={'index': 'name', 'user': 'percent'})
     return x,df
+
 def create_wordcloud(selected_user,df):
 
     f = open('stop_hinglish.txt', 'r')
@@ -52,7 +53,11 @@ def create_wordcloud(selected_user,df):
                 y.append(word)
         return " ".join(y)
 
-    
+    wc = WordCloud(width=500,height=500,min_font_size=10,background_color='white')
+    temp['message'] = temp['message'].apply(remove_stop_words)
+    df_wc = wc.generate(temp['message'].str.cat(sep=" "))
+    return df_wc
+
 def most_common_words(selected_user,df):
 
     f = open('stop_hinglish.txt','r')
@@ -92,12 +97,12 @@ def emoji_helper(selected_user, df):
 
     emojis = []
     for message in df['message']:
-        emojis.extend([c for c in message if c in emoji.UNICODE_EMOJI])
+        emojis.extend([c for c in message if c in emoji.EMOJI_DATA])
 
     emoji_df = pd.DataFrame(Counter(emojis).most_common(len(Counter(emojis))))
 
     return emoji_df
-    
+
 def monthly_timeline(selected_user,df):
 
     if selected_user != 'Overall':
@@ -144,18 +149,3 @@ def activity_heatmap(selected_user,df):
     user_heatmap = df.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
 
     return user_heatmap
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
