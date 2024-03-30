@@ -2,7 +2,6 @@ import streamlit as st
 import preprocessor
 import helper
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
 import seaborn as sns
 
 # Set Streamlit page configuration
@@ -24,7 +23,7 @@ st.markdown(
             background-color: skyblue; /* Light gray background */
         }
         .sidebar .sidebar-content {
-            background-color: #25D366; /* Dark teal */
+            background-color: #1E2A38; /* Dark teal */
             padding-top: 1rem;
             padding-bottom: 1rem;
             padding-left: 2rem;
@@ -35,7 +34,7 @@ st.markdown(
             color: #FFFFFF; /* White text */
         }
         .block-container {
-            background-color: #25D366; /* Change to skyblue or any desired color */
+            background-color: #d2b4de; /* Change to skyblue or any desired color */
             padding: 1.4rem; /* Adjust the padding as needed */
             border-radius: 10px; /* Rounded corners */
         }
@@ -43,7 +42,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
 
 st.sidebar.title("Web Chat Analyzer")
 
@@ -82,44 +80,26 @@ if uploaded_file is not None:
             st.header("Links Shared")
             st.title(num_links)
 
-       # monthly timeline
+        # Monthly timeline
         st.title("Monthly Timeline")
         timeline = helper.monthly_timeline(selected_user, df)
-        fig, ax = plt.subplots()
-        ax.plot(timeline['time'].values, timeline['message'].values, color='green')
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.plot(timeline['time'], timeline['message'], color='#3498db')  # Streamlit blue
         plt.xticks(rotation='vertical')
         st.pyplot(fig)
 
+        # Daily timeline
+        st.title("Daily Timeline")
+        daily_timeline = helper.daily_timeline(selected_user, df)
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.plot(daily_timeline['only_date'], daily_timeline['message'], color='#2ecc71')  # Streamlit green
+        plt.xticks(rotation='vertical')
+        st.pyplot(fig)
 
-        # Assuming 'daily_timeline' is defined before this point in your code
+        # Activity map
+        st.title('Activity Map')
+        col1, col2 = st.columns(2)
 
-        # Print unique values in 'only_date' for inspection
-        if 'daily_timeline' in locals():
-            print("Unique values in 'only_date' before conversion:", daily_timeline['only_date'].unique())
-        else:
-            print("'daily_timeline' is not defined before attempting to print unique values.")
-
-        # Convert 'only_date' to datetime with specified format
-        if 'daily_timeline' in locals():
-            daily_timeline['only_date'] = pd.to_datetime(daily_timeline['only_date'], errors='coerce', format='%Y-%m-%d')
-
-            # Drop rows with NaT (Not a Time) values
-            daily_timeline = daily_timeline.dropna(subset=['only_date'])
-
-            # Confirm changes
-            print("Unique values in 'only_date' after conversion:", daily_timeline['only_date'].unique())
-        else:
-            print("'daily_timeline' is not defined before attempting to convert and drop.")
-
-        # Plotting
-        if 'daily_timeline' in locals():
-            fig, ax = plt.subplots(figsize=(8, 6))
-            ax.plot(daily_timeline['only_date'], daily_timeline['message'], color='#2ecc71')  # Streamlit green
-            plt.xticks(rotation='vertical')
-            st.pyplot(fig)
-        else:
-            print("'daily_timeline' is not defined before attempting to plot.")
-            
         with col1:
             st.header("Most busy day")
             busy_day = helper.week_activity_map(selected_user, df)
@@ -157,6 +137,13 @@ if uploaded_file is not None:
             with col2:
                 st.dataframe(new_df)
 
+        # WordCloud
+        st.title("Wordcloud")
+        df_wc = helper.create_wordcloud(selected_user, df)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.imshow(df_wc, interpolation='bilinear')
+        st.pyplot(fig)
+
         # Most common words
         most_common_df = helper.most_common_words(selected_user, df)
         fig, ax = plt.subplots(figsize=(10, 8))
@@ -164,24 +151,6 @@ if uploaded_file is not None:
         plt.xticks(rotation='horizontal')
         st.title('Most Common Words')
         st.pyplot(fig)
-
-        # Combine all messages into a single string
-        all_messages = " ".join(df[df['user'] == selected_user]['message'].values)
-
-        #Debugging statements
-        print(f"Number of messages for {selected_user}: {df[df['user'] == selected_user].shape[0]}")
-        print(f"All messages: {all_messages}")
-
-        # Check if there are non-whitespace characters in all_messages
-        if all_messages.strip():
-            #Generate the word cloud
-            wordcloud = WordCloud(width=800, height=400, background_color="white").generate(all_messages)
-
-            #Display the word cloud using Streamlit
-            st.image(wordcloud.to_array(), use_container_width=True)
-        else:
-            st.warning("No words to generate a word cloud.")
-       
 
         # Emoji analysis
         emoji_df = helper.emoji_helper(selected_user, df)
@@ -201,4 +170,3 @@ if uploaded_file is not None:
                 st.pyplot(fig)
             else:
                 st.warning("The DataFrame does not have enough columns for plotting.")
-
