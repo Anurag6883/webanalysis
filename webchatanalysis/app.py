@@ -98,6 +98,8 @@ if uploaded_file is not None:
         st.title("Daily Timeline")
         daily_timeline = helper.daily_timeline(selected_user, df)
         fig, ax = plt.subplots(figsize=(8, 6))
+        daily_timeline['only_date'] = pd.to_datetime(daily_timeline['only_date'])
+
         ax.plot(daily_timeline['only_date'], daily_timeline['message'], color='#2ecc71')  # Streamlit green
         plt.xticks(rotation='vertical')
         st.pyplot(fig)
