@@ -3,6 +3,7 @@ import preprocessor
 import helper
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
 # Set Streamlit page configuration
 st.set_page_config(
@@ -84,7 +85,12 @@ if uploaded_file is not None:
         st.title("Monthly Timeline")
         timeline = helper.monthly_timeline(selected_user, df)
         fig, ax = plt.subplots(figsize=(10, 6))
-        ax.plot(timeline['time'], timeline['message'], color='#3498db')  # Streamlit blue
+
+        # Convert 'time' and 'message' columns to numpy arrays
+        time_array = np.array(timeline['time'])
+        message_array = np.array(timeline['message'])
+
+        ax.plot(time_array, message_array, color='#3498db')  # Streamlit blue
         plt.xticks(rotation='vertical')
         st.pyplot(fig)
 
